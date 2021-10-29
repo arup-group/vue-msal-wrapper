@@ -22,7 +22,8 @@
     "@azure/msal-browser": "^2.18.0",
     "axios": "^0.24.0"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arup-group/vue-msal-wrapper.git"
   }
 }
