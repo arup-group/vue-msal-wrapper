@@ -1,0 +1,25 @@
+{
+  "private": false,
+  "name": "vue-msal-wrapper",
+  "version": "0.0.1",
+  "description": "Vue package to authenticate with msal and provides a generic api bearer token wrapper",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "bili --name index --plugin vue --vue.css false",
+    "bundle": "npx bili --bundle-node-modules"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "author": "Ben Hussey",
+  "license": "MIT",
+  "devDependencies": {
+    "bili": "^5.0.5",
+    "rollup-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^2.18.0",
+    "axios": "^0.24.0"
+  }
+}
