@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@blip2/vue-msal-wrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Vue package to authenticate with msal and provides a generic api bearer token wrapper",
   "main": "./dist/index.js",
   "scripts": {
@@ -25,5 +25,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/arup-group/vue-msal-wrapper.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/arup-group/vue-msal-wrapper/issues"
+  },
+  "homepage": "https://github.com/arup-group/vue-msal-wrapper#readme"
 }
