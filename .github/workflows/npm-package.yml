@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: "12.x"
           registry-url: "https://npm.pkg.github.com"
+          scope: "@arup-group"
       - run: npm install
       - run: npm run bundle
       - run: echo "registry=https://npm.pkg.github.com/@arup-group" >> .npmrc
