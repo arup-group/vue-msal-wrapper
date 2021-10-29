@@ -1,6 +1,6 @@
 {
   "private": false,
-  "name": "@arup-group/vue-msal-wrapper",
+  "name": "@blip2/vue-msal-wrapper",
   "version": "0.0.2",
   "description": "Vue package to authenticate with msal and provides a generic api bearer token wrapper",
   "main": "./dist/index.js",
