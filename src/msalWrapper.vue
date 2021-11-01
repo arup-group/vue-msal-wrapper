@@ -12,7 +12,7 @@ export default {
       } else {
         const currentAccounts = this.$msal.msalInstance.getAllAccounts();
         if (!currentAccounts || currentAccounts.length < 1) {
-          this.$msal.msalInstance.loginRedirect(loginRequest);
+          this.$msal.msalInstance.loginRedirect(this.$msal.tokenTypes["login"]);
         } else if (currentAccounts.length === 1) {
           this.$msal.setUser(currentAccounts[0]);
         }

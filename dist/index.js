@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.1
+ * vue-msal-wrapper v0.0.3
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -259,7 +259,7 @@ var script = {
           var currentAccounts = _this2.$msal.msalInstance.getAllAccounts();
 
           if (!currentAccounts || currentAccounts.length < 1) {
-            _this2.$msal.msalInstance.loginRedirect(loginRequest);
+            _this2.$msal.msalInstance.loginRedirect(_this2.$msal.tokenTypes["login"]);
           } else if (currentAccounts.length === 1) {
             _this2.$msal.setUser(currentAccounts[0]);
           }
