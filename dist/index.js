@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.3
+ * vue-msal-wrapper v0.0.5
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -449,7 +449,7 @@ var msalAuthHandler = /*#__PURE__*/function () {
         })["catch"](function (err) {
           if (err.name === "InteractionRequiredAuthError") {
             return that.msalInstance.acquireTokenRedirect(Object.assign({}, that.tokenTypes[tokenType], {
-              account: msalInstance.getAllAccounts()[0]
+              account: that.msalInstance.getAllAccounts()[0]
             })).then(function (response) {
               that.setToken(tokenType, response);
               resolve();
