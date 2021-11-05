@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "vue-msal-wrapper",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Vue package to authenticate with msal and provides a generic api bearer token wrapper",
   "main": "./dist/index.js",
   "scripts": {

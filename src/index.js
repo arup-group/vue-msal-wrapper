@@ -46,7 +46,7 @@ class msalAuthHandler {
             return that.msalInstance
               .acquireTokenRedirect({
                 ...that.tokenTypes[tokenType],
-                account: msalInstance.getAllAccounts()[0],
+                account: that.msalInstance.getAllAccounts()[0],
               })
               .then((response) => {
                 that.setToken(tokenType, response);
