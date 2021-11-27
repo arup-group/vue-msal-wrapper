@@ -15,8 +15,8 @@ class msalAuthHandler {
     Vue.msalAuthHandler = this;
     Vue.prototype.$msal = this;
     this.msalInstance = new PublicClientApplication(options.msalConfig);
-    this.tokenTypes = options.tokenTypes;
-    this.excludeRoutes = options.excludeRoutes;
+    this.tokenTypes = options.tokenTypes || {};
+    this.excludeRoutes = options.excludeRoutes || [];
     Vue.component("msal-wrapper", msalWrapper);
   }
 
