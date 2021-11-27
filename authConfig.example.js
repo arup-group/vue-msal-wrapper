@@ -25,4 +25,5 @@ export default {
       scopes: ["https://another-api.onmicrosoft.com/user_impersonation"],
     },
   },
+  excludeRoutes: ["no-auth-route", "another-route"],
 };

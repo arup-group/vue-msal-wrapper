@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.5
+ * vue-msal-wrapper v0.0.6
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -34,6 +34,9 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+//
+//
+//
 //
 //
 //
@@ -259,7 +262,7 @@ var script = {
           var currentAccounts = _this2.$msal.msalInstance.getAllAccounts();
 
           if (!currentAccounts || currentAccounts.length < 1) {
-            _this2.$msal.msalInstance.loginRedirect(_this2.$msal.tokenTypes["login"]);
+            _this2.$msal.login();
           } else if (currentAccounts.length === 1) {
             _this2.$msal.setUser(currentAccounts[0]);
           }
@@ -275,8 +278,23 @@ var script = {
       }
     }
   },
+  computed: {
+    showContent: function showContent() {
+      if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
+        if (this.authenticated) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  },
   mounted: function mounted() {
-    this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
+      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    }
   }
 };
 
@@ -366,7 +384,7 @@ var __vue_render__ = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _vm.authenticated ? _c('div', [_vm._t("default")], 2) : _vm._e();
+  return _c('div', [_vm.showContent ? _c('div', [_vm._t("default")], 2) : _c('div')]);
 };
 
 var __vue_staticRenderFns__ = [];
@@ -412,6 +430,7 @@ var msalAuthHandler = /*#__PURE__*/function () {
     this.tokenTypes = {};
     this.currentUser = {};
     this.tokenStore = {};
+    this.excludeRoutes = [];
     this.msalInstance = null;
   }
 
@@ -422,6 +441,7 @@ var msalAuthHandler = /*#__PURE__*/function () {
       Vue.prototype.$msal = this;
       this.msalInstance = new msalBrowser.PublicClientApplication(options.msalConfig);
       this.tokenTypes = options.tokenTypes;
+      this.excludeRoutes = options.excludeRoutes;
       Vue.component("msal-wrapper", __vue_component__);
     }
   }, {
@@ -474,8 +494,11 @@ var msalAuthHandler = /*#__PURE__*/function () {
         }
       });
       http.interceptors.request.use(function (config) {
-        config.headers["Authorization"] = "Bearer ".concat(tokenStore[tokenType]);
-        Object.assign(config.headers, additionalHeaders);
+        if (tokenStore[tokenType]) {
+          config.headers["Authorization"] = "Bearer ".concat(tokenStore[tokenType]);
+          Object.assign(config.headers, additionalHeaders);
+        }
+
         return config;
       });
       http.interceptors.response.use(function (response) {
@@ -484,6 +507,11 @@ var msalAuthHandler = /*#__PURE__*/function () {
         return err;
       });
       return http;
+    }
+  }, {
+    key: "login",
+    value: function login() {
+      this.msalInstance.loginRedirect(this.tokenTypes["login"]);
     }
   }, {
     key: "getUser",

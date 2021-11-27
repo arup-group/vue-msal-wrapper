@@ -1,5 +1,8 @@
 <template>
-  <div v-if="authenticated"><slot></slot></div>
+  <div>
+    <div v-if="showContent"><slot></slot></div>
+    <div v-else></div>
+  </div>
 </template>
 
 <script>
@@ -12,7 +15,7 @@ export default {
       } else {
         const currentAccounts = this.$msal.msalInstance.getAllAccounts();
         if (!currentAccounts || currentAccounts.length < 1) {
-          this.$msal.msalInstance.loginRedirect(this.$msal.tokenTypes["login"]);
+          this.$msal.login();
         } else if (currentAccounts.length === 1) {
           this.$msal.setUser(currentAccounts[0]);
         }
@@ -23,8 +26,22 @@ export default {
       this.authenticated = true;
     },
   },
+  computed: {
+    showContent() {
+      if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
+        if (this.authenticated) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    },
+  },
   mounted() {
-    this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
+      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    }
   },
 };
 </script>

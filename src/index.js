@@ -7,6 +7,7 @@ class msalAuthHandler {
     this.tokenTypes = {};
     this.currentUser = {};
     this.tokenStore = {};
+    this.excludeRoutes = [];
     this.msalInstance = null;
   }
 
@@ -15,6 +16,7 @@ class msalAuthHandler {
     Vue.prototype.$msal = this;
     this.msalInstance = new PublicClientApplication(options.msalConfig);
     this.tokenTypes = options.tokenTypes;
+    this.excludeRoutes = options.excludeRoutes;
     Vue.component("msal-wrapper", msalWrapper);
   }
 
@@ -24,14 +26,14 @@ class msalAuthHandler {
       response.expiresOn.getTime() - new Date().getTime() - expirationOffset;
     this.tokenStore[tokenType] = response.accessToken;
     const that = this;
-    window.setTimeout(async function() {
+    window.setTimeout(async function () {
       that.getAuthToken(tokenType);
     }, expiration);
   }
 
   getAuthToken(tokenType) {
     const that = this;
-    return new Promise(async function(resolve) {
+    return new Promise(async function (resolve) {
       await that.msalInstance
         .acquireTokenSilent({
           ...that.tokenTypes[tokenType],
@@ -61,7 +63,7 @@ class msalAuthHandler {
   }
 
   authenticatedApi(baseURL, tokenType, additionalHeaders = {}) {
-    const tokenStore = this.tokenStore
+    const tokenStore = this.tokenStore;
     let http = axios.create({
       baseURL: baseURL,
       withCredentials: false,
@@ -70,9 +72,11 @@ class msalAuthHandler {
         "Content-Type": "application/json",
       },
     });
-    http.interceptors.request.use(function(config) {
-      config.headers["Authorization"] = `Bearer ${tokenStore[tokenType]}`;
-      Object.assign(config.headers, additionalHeaders);
+    http.interceptors.request.use(function (config) {
+      if (tokenStore[tokenType]) {
+        config.headers["Authorization"] = `Bearer ${tokenStore[tokenType]}`;
+        Object.assign(config.headers, additionalHeaders);
+      }
       return config;
     });
     http.interceptors.response.use(
@@ -84,6 +88,10 @@ class msalAuthHandler {
       }
     );
     return http;
+  }
+
+  login() {
+    this.msalInstance.loginRedirect(this.tokenTypes["login"]);
   }
 
   getUser() {
