@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.6
+ * vue-msal-wrapper v0.0.8
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -303,14 +303,15 @@ var script = {
       return true;
     }
   },
-  mounted: function mounted() {
-    if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
-      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
-    }
-  },
-  beforeRouteUpdate: function beforeRouteUpdate(to) {
-    if (!this.$msal.excludeRoutes.includes(to.name)) {
-      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+  watch: {
+    "$route.name": {
+      handler: function handler(name) {
+        if (!this.$msal.excludeRoutes.includes(name)) {
+          this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 };

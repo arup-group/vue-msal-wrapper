@@ -38,15 +38,18 @@ export default {
       return true;
     },
   },
-  mounted() {
-    if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
-      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
-    }
-  },
-  beforeRouteUpdate(to) {
-    if (!this.$msal.excludeRoutes.includes(to.name)) {
-      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
-    }
+  watch: {
+    "$route.name": {
+      handler: function (name) {
+        if (!this.$msal.excludeRoutes.includes(name)) {
+          this.$msal.msalInstance
+            .handleRedirectPromise()
+            .then(this.handleResponse);
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
 };
 </script>
