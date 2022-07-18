@@ -43,5 +43,10 @@ export default {
       this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
     }
   },
+  beforeRouteUpdate(to) {
+    if (!this.$msal.excludeRoutes.includes(to.name)) {
+      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    }
+  },
 };
 </script>

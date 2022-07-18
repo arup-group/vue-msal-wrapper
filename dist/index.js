@@ -245,6 +245,18 @@ function _continue(value, then) {
   return value && value.then ? value.then(then) : then(value);
 }
 
+function _await$1(value, then, direct) {
+  if (direct) {
+    return then ? then(value) : value;
+  }
+
+  if (!value || !value.then) {
+    value = Promise.resolve(value);
+  }
+
+  return then ? value.then(then) : value;
+}
+
 var script = {
   data: function data() {
     return {
@@ -268,11 +280,11 @@ var script = {
           }
         }
 
-        return _continue(_forOf(Object.keys(_this2.$msal.tokenTypes), function (tokenType) {
+        return _await$1(_continue(_forOf(Object.keys(_this2.$msal.tokenTypes), function (tokenType) {
           return _awaitIgnored$1(_this2.$msal.getAuthToken(tokenType));
         }), function () {
           _this2.authenticated = true;
-        });
+        }));
       } catch (e) {
         return Promise.reject(e);
       }
@@ -293,6 +305,11 @@ var script = {
   },
   mounted: function mounted() {
     if (!this.$msal.excludeRoutes.includes(this.$route.name)) {
+      this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
+    }
+  },
+  beforeRouteUpdate: function beforeRouteUpdate(to) {
+    if (!this.$msal.excludeRoutes.includes(to.name)) {
       this.$msal.msalInstance.handleRedirectPromise().then(this.handleResponse);
     }
   }
@@ -440,8 +457,8 @@ var msalAuthHandler = /*#__PURE__*/function () {
       Vue.msalAuthHandler = this;
       Vue.prototype.$msal = this;
       this.msalInstance = new msalBrowser.PublicClientApplication(options.msalConfig);
-      this.tokenTypes = options.tokenTypes;
-      this.excludeRoutes = options.excludeRoutes;
+      this.tokenTypes = options.tokenTypes || {};
+      this.excludeRoutes = options.excludeRoutes || [];
       Vue.component("msal-wrapper", __vue_component__);
     }
   }, {
