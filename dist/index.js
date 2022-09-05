@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.8
+ * vue-msal-wrapper v0.0.9
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -31,6 +31,9 @@ function _defineProperties(target, props) {
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
   return Constructor;
 }
 
@@ -223,13 +226,11 @@ function _forOf(target, body, check) {
   } // No support for Symbol.iterator
 
 
-  // No support for Symbol.iterator
   if (!("length" in target)) {
     throw new TypeError("Object is not iterable");
   } // Handle live collections properly
 
 
-  // Handle live collections properly
   var values = [];
 
   for (var i = 0; i < target.length; i++) {
@@ -518,11 +519,6 @@ var msalAuthHandler = /*#__PURE__*/function () {
         }
 
         return config;
-      });
-      http.interceptors.response.use(function (response) {
-        return response;
-      }, function (err) {
-        return err;
       });
       return http;
     }

@@ -79,14 +79,6 @@ class msalAuthHandler {
       }
       return config;
     });
-    http.interceptors.response.use(
-      (response) => {
-        return response;
-      },
-      (err) => {
-        return err;
-      }
-    );
     return http;
   }
 
