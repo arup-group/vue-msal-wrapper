@@ -1,5 +1,5 @@
 /*!
- * vue-msal-wrapper v0.0.9
+ * vue-msal-wrapper v0.0.10
  * (c) Ben Hussey
  * Released under the MIT License.
  */
@@ -476,6 +476,15 @@ var msalAuthHandler = /*#__PURE__*/function () {
       }), expiration);
     }
   }, {
+    key: "inIframe",
+    value: function inIframe() {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        return true;
+      }
+    }
+  }, {
     key: "getAuthToken",
     value: function getAuthToken(tokenType) {
       var that = this;
@@ -487,7 +496,13 @@ var msalAuthHandler = /*#__PURE__*/function () {
           resolve();
         })["catch"](function (err) {
           if (err.name === "InteractionRequiredAuthError") {
-            return that.msalInstance.acquireTokenRedirect(Object.assign({}, that.tokenTypes[tokenType], {
+            var tokenFn = that.msalInstance.acquireTokenRedirect;
+
+            if (that.inIframe()) {
+              tokenFn = that.msalInstance.acquireTokenPopup;
+            }
+
+            return tokenFn(Object.assign({}, that.tokenTypes[tokenType], {
               account: that.msalInstance.getAllAccounts()[0]
             })).then(function (response) {
               that.setToken(tokenType, response);
@@ -525,7 +540,11 @@ var msalAuthHandler = /*#__PURE__*/function () {
   }, {
     key: "login",
     value: function login() {
-      this.msalInstance.loginRedirect(this.tokenTypes["login"]);
+      if (this.inIframe()) {
+        this.msalInstance.loginPopup(this.tokenTypes["login"]);
+      } else {
+        this.msalInstance.loginRedirect(this.tokenTypes["login"]);
+      }
     }
   }, {
     key: "getUser",

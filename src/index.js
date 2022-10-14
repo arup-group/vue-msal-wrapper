@@ -31,6 +31,14 @@ class msalAuthHandler {
     }, expiration);
   }
 
+  inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
   getAuthToken(tokenType) {
     const that = this;
     return new Promise(async function (resolve) {
@@ -45,11 +53,14 @@ class msalAuthHandler {
         })
         .catch((err) => {
           if (err.name === "InteractionRequiredAuthError") {
-            return that.msalInstance
-              .acquireTokenRedirect({
-                ...that.tokenTypes[tokenType],
-                account: that.msalInstance.getAllAccounts()[0],
-              })
+            let tokenFn = that.msalInstance.acquireTokenRedirect
+            if (that.inIframe()) {
+              tokenFn = that.msalInstance.acquireTokenPopup
+            }
+            return tokenFn({
+              ...that.tokenTypes[tokenType],
+              account: that.msalInstance.getAllAccounts()[0],
+            })
               .then((response) => {
                 that.setToken(tokenType, response);
                 resolve();
@@ -83,7 +94,11 @@ class msalAuthHandler {
   }
 
   login() {
-    this.msalInstance.loginRedirect(this.tokenTypes["login"]);
+    if (this.inIframe()) {
+      this.msalInstance.loginPopup(this.tokenTypes["login"]);
+    } else {
+      this.msalInstance.loginRedirect(this.tokenTypes["login"]);
+    }
   }
 
   getUser() {

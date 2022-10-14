@@ -14,7 +14,7 @@ Vue.use(msalAuthHandler, authConfig);
 
 Create an authConfig.js in the same folder based on authConfig.example.js - note there must always be a login tokenType with scopes defined.
 
-To trigger auto-login and prevent components/routing elements from being called lnstall the `<msal-wrapper></msal-wrapper>` tag in the App.vue file.
+To trigger auto-login and prevent components/routing elements from being called install the `<msal-wrapper></msal-wrapper>` tag in the App.vue file.
 
 Manual login/logout functionality is coming soon.
 
